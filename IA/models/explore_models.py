@@ -5,12 +5,15 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.svm import SVC
 from sklearn.neighbors import KNeighborsClassifier
 
-from scikeras.wrappers import KerasClassifier
 from sklearn.model_selection import cross_val_score
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+from scikeras.wrappers import KerasClassifier
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Dropout, Input
 
 import numpy as np
+import matplotlib.pyplot as plt
+
 
 def explore_models(X, y):
     results = train_models(X, y)
@@ -32,6 +35,51 @@ def explore_models(X, y):
     top_3 = sorted(summary.items(), key=lambda x: x[1]['mean'], reverse=True)[:3]
     for name, stats in top_3:
         print(f"{name}: scores = {stats['scores']}")
+        print(f"\nModèle: {name}")
+
+        if name == 'Random Forest':
+            model = RandomForestClassifier(n_estimators=100, random_state=42)
+        elif name == 'Gradient Boosting':
+            model = GradientBoostingClassifier(n_estimators=100, random_state=42)
+        elif name == 'SVM Linear':
+            model = SVC(kernel='linear', random_state=42)
+        elif name == 'SVM RBF':
+            model = SVC(kernel='rbf', random_state=42)
+        elif name == 'SVM Poly':
+            model = SVC(kernel='poly', random_state=42)
+        elif name == 'SVM Sigmoid':
+            model = SVC(kernel='sigmoid', random_state=42)
+        elif name == 'KNN':
+            model = KNeighborsClassifier(n_neighbors=5)
+        elif name == 'KNN Cosine':
+            model = KNeighborsClassifier(n_neighbors=5, metric='cosine')
+        elif name == 'Logistic Regression':
+            model = LogisticRegression(max_iter=1000, random_state=42)
+        elif name == 'SGD Classifier':
+            model = SGDClassifier(max_iter=1000, tol=1e-3, random_state=42)
+        elif name == 'ANN':
+            model = KerasClassifier(
+                model=create_ann_model,  # ✅ remplace build_fn
+                input_dim=X.shape[1],
+                nb_outputs=len(np.unique(y)),
+                nb_layers=2,
+                nb_neurons=8,
+                epochs=50,
+                batch_size=100,
+                verbose=0
+            )
+        else:
+            print("Modèle non reconnu pour la matrice de confusion.")
+            continue
+
+        model.fit(X, y)
+        y_pred = model.predict(X)
+
+        cm = confusion_matrix(y, y_pred)
+        disp = ConfusionMatrixDisplay(confusion_matrix=cm)
+        disp.plot(cmap=plt.cm.Blues)
+        plt.title(f'Matrice de confusion - {name}')
+        plt.show()
 
     if 'Random Forest' in results:
         rf_model = RandomForestClassifier(n_estimators=100, random_state=42)
@@ -117,15 +165,14 @@ def explore_sgd_classifier(X, y):
 def explore_ann(X, y, nb_layers=2, nb_neurons=8):
     input_dim = X.shape[1]
     nb_outputs = len(np.unique(y))
-    print("KerasClassifier utilisé depuis :", KerasClassifier.__module__)
 
     ann_model = KerasClassifier(
-        model=create_ann_model,         # ✅ remplace build_fn
+        model=create_ann_model,
         input_dim=input_dim,
         nb_outputs=nb_outputs,
         nb_layers=nb_layers,
         nb_neurons=nb_neurons,
-        epochs=10,
+        epochs=50,
         batch_size=100,
         verbose=0
     )
