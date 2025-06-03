@@ -30,12 +30,9 @@ def pca(df, nb_components=None):
     if nb_components is None:
         pca = PCA()
         pca.fit(df)
-        return np.cumsum(pca.explained_variance_ratio_)
     else:
         pca = PCA(n_components=nb_components)
-        components = pca.fit_transform(df)
-        loadings = pca.components_.T * np.sqrt(pca.explained_variance_)
-        return components, loadings
+    return pca.fit_transform(df), pca.components_.T * np.sqrt(pca.explained_variance_), np.cumsum(pca.explained_variance_ratio_)
 
 def filter_columns(df:pd.DataFrame, *features)->pd.DataFrame:
     new_df = df.filter(items=features)
