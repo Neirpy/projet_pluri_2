@@ -54,12 +54,16 @@ def find_all_from_directory():
     all_dir = os.listdir(f"IA/{current_path}/data")
     for dir in all_dir:
         name = dir.upper()
-        if name == Action.name:
-            df = concat_same_move(Action, *[item for item in os.listdir() if os.path.isdir(item)])
+        if name in Action.name:
+            a = Action(name)
+            df = concat_same_move(a, *[item for item in os.listdir() if os.path.isdir(item)])
             list_df_move.append(df)
-        else:
-            df  = concat_same_speed(Speed, *[item for item in os.listdir() if os.path.isdir(item)])
+        if name in Vitesse.name:
+            s = Vitesse(name)
+            df  = concat_same_speed(s, *[item for item in os.listdir() if os.path.isdir(item)])
             list_df_speed.append(df)
+        else:
+            return df_move, df_speed
     df_move = concat_all(*list_df_move)
     df_speed = concat_all(*list_df_speed)
     return df_move, df_speed
