@@ -23,9 +23,10 @@ def heatmap(df:pd.DataFrame, type:str):
 
 def elbow_method(X:pd.DataFrame):
     explained_variance_ratio = pca(X)
-    px.area(
+    fig = px.area(
         x=range(1, explained_variance_ratio.shape[0] + 1),
         y=explained_variance_ratio,
         labels={"x": "# Components", "y": "Explained Variance"}
     )
+    fig.show()
 
