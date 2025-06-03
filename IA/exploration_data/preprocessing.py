@@ -47,8 +47,45 @@ def find_outliers(df):
 def corr_matrix(df):
     return df.corr()
 
-def data_augmentation(df:pd.DataFrame):
-    pass
+
+def apply_translation(df: pd.DataFrame, exclude_columns, tx=0.01, ty=0.01):
+    new_df = df.copy()
+    for col in new_df.columns:
+        if col not in exclude_columns:
+            if '_X' in col:
+                new_df[col] += np.random.uniform(-tx, tx)
+            elif '_Y' in col:
+                new_df[col] += np.random.uniform(-ty, ty)
+    return new_df
+
+
+def apply_zoom(df: pd.DataFrame, exclude_columns):
+    new_df = df.copy()
+    factor = np.random.uniform(0.95, 1.05)
+    for col in new_df.columns:
+        if col not in exclude_columns:
+            new_df[col] = 0.5 + (new_df[col] - 0.5) * factor
+    return new_df
+
+
+def apply_noised(df: pd.DataFrame, exclude_columns, std=0.003):
+    new_df = df.copy()
+    for col in new_df.columns:
+        if col not in exclude_columns:
+            new_df[col] += np.random.normal(0, std)
+    return new_df
+
+
+def data_augmentation(df: pd.DataFrame, exclude_columns):
+
+    original = df.copy()
+    translated = apply_translation(df, exclude_columns)
+    zoomed = apply_zoom(df, exclude_columns)
+    noised = apply_noised(df, exclude_columns)
+
+    augmented = pd.concat([original, translated, zoomed, noised], ignore_index=True)
+
+    return augmented
 
 
 
