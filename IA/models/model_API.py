@@ -15,7 +15,6 @@ class PredictRequest(BaseModel):
     feature3: float
     feature4: float
 
-
 # 3. Endpoint de prédiction
 @app.post("/predict")
 def predict(input: PredictRequest):
@@ -26,3 +25,8 @@ def predict(input: PredictRequest):
     prediction = model.predict(features)
 
     return {"prediction": int(prediction[0])}
+
+@app.get("/random")
+def random():
+    random_choice = np.random.choice(["avant", "arriere", "droite", "gauche", "tourner_droite", "tourner_gauche", "coucou", "neutre"])
+    return random_choice

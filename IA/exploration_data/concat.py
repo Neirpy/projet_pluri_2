@@ -51,7 +51,7 @@ def find_all_from_directory():
     list_df_speed = []
     df_move = pd.DataFrame()
     df_speed = pd.DataFrame()
-    all_dir = os.listdir(f"{current_path}/datas")
+    all_dir = os.listdir(f"IA/{current_path}/data")
     for dir in all_dir:
         name = dir.upper()
         if name == Action.name:
