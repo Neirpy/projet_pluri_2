@@ -1,5 +1,4 @@
 import pandas as pd
-import seaborn as sns
 import sklearn as sk
 
 
@@ -38,7 +37,7 @@ def find_outliers(df):
     pass
 
 def corr_matrix(df):
-    pass
+    return df.corr()
 
 
 
