@@ -1,7 +1,9 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
-from IA.exploration_data.preprocessing import corr_matrix
+import plotly.express as px
+
+from IA.exploration_data.preprocessing import corr_matrix, pca
 
 
 def boxplot(df:pd.DataFrame, class_name:str):
@@ -18,3 +20,12 @@ def heatmap(df:pd.DataFrame, type:str):
     plt.title(f"Correlation Matrix for df {type}")
     plt.xticks(rotation=90)
     plt.show()
+
+def elbow_method(X:pd.DataFrame):
+    explained_variance_ratio = pca(X)
+    px.area(
+        x=range(1, explained_variance_ratio.shape[0] + 1),
+        y=explained_variance_ratio,
+        labels={"x": "# Components", "y": "Explained Variance"}
+    )
+

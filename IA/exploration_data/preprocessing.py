@@ -1,6 +1,6 @@
 import pandas as pd
-import sklearn as sk
-
+from sklearn.decomposition import PCA
+import numpy as np
 
 def normalize(df:pd.DataFrame):
     new_df = pd.DataFrame(columns=df.columns)
@@ -26,8 +26,16 @@ def normalize(df:pd.DataFrame):
     return new_df.astype(float)
 
 
-def pca(df):
-    pass
+def pca(df, nb_components=None):
+    if nb_components is None:
+        pca = PCA()
+        pca.fit(df)
+        return np.cumsum(pca.explained_variance_ratio_)
+    else:
+        pca = PCA(n_components=nb_components)
+        components = pca.fit_transform(df)
+        loadings = pca.components_.T * np.sqrt(pca.explained_variance_)
+        return components, loadings
 
 def filter_columns(df:pd.DataFrame, *features)->pd.DataFrame:
     new_df = df.filter(items=features)
