@@ -1,0 +1,163 @@
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import GradientBoostingClassifier
+from sklearn.linear_model import SGDClassifier
+from sklearn.linear_model import LogisticRegression
+from sklearn.svm import SVC
+from sklearn.neighbors import KNeighborsClassifier
+
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Input, Dropout
+from scikeras.wrappers import KerasClassifier
+
+from sklearn.model_selection import cross_val_score
+
+import numpy as np
+
+def explore_models(X, y):
+    results = train_models(X, y)
+
+    print("=== Moyenne et écart-type des scores ===")
+    summary = {
+        name: {
+            'mean': np.mean(scores),
+            'std': np.std(scores),
+            'scores': scores
+        }
+        for name, scores in results.items()
+    }
+
+    for name, stats in summary.items():
+        print(f"{name}: mean = {stats['mean']:.4f}, std = {stats['std']:.4f}")
+
+    print("\n=== Top 3 modèles (détail des scores) ===")
+    top_3 = sorted(summary.items(), key=lambda x: x[1]['mean'], reverse=True)[:3]
+    for name, stats in top_3:
+        print(f"{name}: scores = {stats['scores']}")
+
+    if 'Random Forest' in results:
+        rf_model = RandomForestClassifier(n_estimators=100, random_state=42)
+        rf_model.fit(X, y)
+        importances = rf_model.feature_importances_
+        indices = np.argsort(importances)[::-1]
+        print("\n=== Random Forest Feature Importances ===")
+        for f in range(X.shape[1]):
+            print(f"{f + 1}. Feature {indices[f]}: {importances[indices[f]]:.4f}")
+
+    if 'Gradient Boosting' in results:
+        gb_model = GradientBoostingClassifier(n_estimators=100, random_state=42)
+        gb_model.fit(X, y)
+        importances = gb_model.feature_importances_
+        indices = np.argsort(importances)[::-1]
+        print("\n=== Gradient Boosting Feature Importances ===")
+        for f in range(X.shape[1]):
+            print(f"{f + 1}. Feature {indices[f]}: {importances[indices[f]]:.4f}")
+
+    return top_3
+
+def train_models(X,y):
+    models_results = {
+        'Random Forest': explore_random_forest(X, y),
+        'Gradient Boosting': explore_gradient_boosting(X, y),
+        'SVM Linear': explore_svm_linear(X, y),
+        'SVM RBF': explore_svm_rbf(X, y),
+        'SVM Poly': explore_svm_poly(X, y),
+        'SVM Sigmoid': explore_svm_sigmoid(X, y),
+        'KNN': explore_knn(X, y),
+        'KNN Cosine': explore_knn_cosine(X, y),
+        'Logistic Regression': explore_logistic_regression(X, y),
+        'SGD Classifier': explore_sgd_classifier(X, y),
+        'ANN': explore_ann(X, y, nb_layers=2, nb_neurons=8)
+    }
+    return models_results
+
+def explore_random_forest(X, y):
+    rf_model = RandomForestClassifier(n_estimators=100, random_state=42)
+    rf_scores = cross_val_score(rf_model, X, y, cv=5, scoring='accuracy')
+
+    return rf_scores
+
+def explore_gradient_boosting(X, y):
+    gb_model = GradientBoostingClassifier(n_estimators=100, random_state=42)
+    gb_scores = cross_val_score(gb_model, X, y, cv=5, scoring='accuracy')
+
+    return gb_scores
+
+def explore_svm_linear(X, y):
+    svm_model = SVC(kernel='linear', random_state=42)
+    svm_scores = cross_val_score(svm_model, X, y, cv=5, scoring='accuracy')
+
+    return svm_scores
+
+def explore_svm_rbf(X, y):
+    svm_model = SVC(kernel='rbf', random_state=42)
+    svm_scores = cross_val_score(svm_model, X, y, cv=5, scoring='accuracy')
+
+    return svm_scores
+
+def explore_svm_poly(X, y):
+    svm_model = SVC(kernel='poly', random_state=42)
+    svm_scores = cross_val_score(svm_model, X, y, cv=5, scoring='accuracy')
+
+    return svm_scores
+
+def explore_svm_sigmoid(X, y):
+    svm_model = SVC(kernel='sigmoid', random_state=42)
+    svm_scores = cross_val_score(svm_model, X, y, cv=5, scoring='accuracy')
+
+    return svm_scores
+
+def explore_knn(X, y):
+    from sklearn.neighbors import KNeighborsClassifier
+    knn_model = KNeighborsClassifier(n_neighbors=5)
+    knn_scores = cross_val_score(knn_model, X, y, cv=5, scoring='accuracy')
+
+    return knn_scores
+
+def explore_knn_cosine(X, y):
+    knn_model = KNeighborsClassifier(n_neighbors=5, metric='cosine')
+    knn_scores = cross_val_score(knn_model, X, y, cv=5, scoring='accuracy')
+
+    return knn_scores
+
+def explore_logistic_regression(X, y):
+    lr_model = LogisticRegression(max_iter=1000, random_state=42)
+    lr_scores = cross_val_score(lr_model, X, y, cv=5, scoring='accuracy')
+
+    return lr_scores
+
+def explore_sgd_classifier(X, y):
+    sgd_model = SGDClassifier(max_iter=1000, tol=1e-3, random_state=42)
+    sgd_scores = cross_val_score(sgd_model, X, y, cv=5, scoring='accuracy')
+
+    return sgd_scores
+
+def explore_ann(X, y, nb_layers=2, nb_neurons=8):
+    input_dim = X.shape[1]
+    nb_outputs = len(set(y))
+
+    ann_model = KerasClassifier(
+        build_fn=create_ann_model,
+        input_dim=input_dim,
+        nb_outputs=nb_outputs,
+        nb_layers=nb_layers,
+        nb_neurons=nb_neurons,
+        epochs=10,
+        batch_size=100,
+        verbose=0
+    )
+    ann_scores = cross_val_score(ann_model, X, y, cv=5, scoring='accuracy')
+
+    return ann_scores
+
+def create_ann_model(input_dim, nb_outputs, nb_layers=2, nb_neurons=8):
+    model = Sequential()
+    model.add(Input(shape=(input_dim,)))
+    model.add(Dense(nb_neurons, activation='relu'))
+    model.add(Dropout(0.2))
+    for _ in range(nb_layers - 1):
+        model.add(Dense(nb_neurons, activation='relu'))
+        model.add(Dropout(0.2))
+    model.add(Dense(nb_outputs, activation='softmax'))
+
+    model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+    return model
