@@ -3,10 +3,9 @@ import seaborn as sns
 import sklearn as sk
 
 
-def normalize(df):
+def normalize(df:pd.DataFrame):
     new_df = pd.DataFrame(columns=df.columns)
     for index, line in df.iterrows():
-        list_norm = []
         x_max_ref = line.LEFT_SHOULDER_X
         y_max_ref = line.LEFT_SHOULDER_Y
         x_min_ref = line.LEFT_HIP_X
@@ -19,12 +18,13 @@ def normalize(df):
 
         for col in df.columns:
             if "X" in col:
-                val = (line[col] - x_min_ref) / scale
-            if "Y" in col:
-                val = (line[col] - y_min_ref) / scale
+                val = float((line[col] - x_min_ref) / scale)
+            elif "Y" in col:
+                val = float((line[col] - y_min_ref) / scale)
+            else:
+                val = line[col]
             new_df.loc[index, col] = val
-
-    return new_df
+    return new_df.astype(float)
 
 
 def pca(df):

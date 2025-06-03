@@ -50,7 +50,7 @@ def concat_same_move(move:Action, *links)->pd.DataFrame:
     for link in links:
         df = pd.read_csv(link)
         df['id'] = id
-        df["action"] = move
+        df["action"] = move.value
         df_move = pd.concat([df_move, df], ignore_index=True)
         id += 1
     return df_move
@@ -67,7 +67,7 @@ def concat_same_speed(speed:Vitesse, *links)->pd.DataFrame:
     for link in links:
         df = pd.read_csv(link)
         df['id'] = id
-        df["vitesse"] = speed
+        df["vitesse"] = speed.value
         df_speed = pd.concat([df_speed, df], ignore_index=True)
         id += 1
     return df_speed
