@@ -4,8 +4,9 @@ import sklearn as sk
 
 
 def normalize(df):
-    new_df = pd.DataFrame()
-    for line in df.iterrows():
+    new_df = pd.DataFrame(columns=df.columns)
+    for index, line in df.iterrows():
+        list_norm = []
         x_max_ref = line.LEFT_SHOULDER_X
         y_max_ref = line.LEFT_SHOULDER_Y
         x_min_ref = line.LEFT_HIP_X
@@ -17,8 +18,13 @@ def normalize(df):
         scale = (dx**2 + dy**2)**0.5
 
         for col in df.columns:
-            pass
+            if "X" in col:
+                val = (line[col] - x_min_ref) / scale
+            if "Y" in col:
+                val = (line[col] - y_min_ref) / scale
+            new_df.loc[index, col] = val
 
+    return new_df
 
 
 def pca(df):
