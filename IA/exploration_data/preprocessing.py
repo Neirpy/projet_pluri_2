@@ -3,6 +3,29 @@ from sklearn.decomposition import PCA
 import numpy as np
 from sklearn.preprocessing import LabelEncoder
 
+def normalize_predict(df:pd.DataFrame) -> pd.DataFrame:
+    new_df = pd.DataFrame(columns=df.columns)
+    for index, line in df.iterrows():
+        x_max_ref = line.LEFT_SHOULDER_X
+        y_max_ref = line.LEFT_SHOULDER_Y
+        x_min_ref = line.LEFT_HIP_X
+        y_min_ref = line.LEFT_HIP_Y
+
+        dx = x_max_ref - x_min_ref
+        dy = y_max_ref - y_min_ref
+
+        scale = (dx**2 + dy**2)**0.5
+
+        for col in df.columns:
+            if "X" in col:
+                val = float((line[col] - x_min_ref) / scale)
+            elif "Y" in col:
+                val = float((line[col] - y_min_ref) / scale)
+            else:
+                val = line[col]
+            new_df.loc[index, col] = val
+
+    return new_df
 
 def normalize(df:pd.DataFrame, label) -> pd.DataFrame:
     new_df = pd.DataFrame(columns=df.columns)

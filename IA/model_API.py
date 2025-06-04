@@ -7,7 +7,7 @@ import joblib
 import numpy as np
 import pandas as pd
 
-from exploration_data.preprocessing import normalize
+from exploration_data.preprocessing import normalize_predict
 
 model_speed = joblib.load("models_temp/best_model_speed.pkl")
 model_move = joblib.load("models_temp/best_model_move.pkl")
@@ -79,7 +79,7 @@ def predict(input: InputData):
     df_full = pd.DataFrame([input.values], columns=columns)
 
     # Normalisation de toutes les colonnes
-    df_full_norm = normalize(df_full)
+    df_full_norm = normalize_predict(df_full)
     df_full_norm = pd.DataFrame(df_full_norm, columns=columns)
 
     # Sélection des features après normalisation

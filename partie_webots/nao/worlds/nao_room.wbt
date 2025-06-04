@@ -43,8 +43,10 @@ WorldInfo {
   ]
 }
 Viewpoint {
-  orientation 0.3415648707819791 -0.09962822235370314 -0.934562815630031 3.673841994828884
-  position 0.07176404396430924 0.25485915827248157 1.6213577082206974
+  orientation 0.21741719515747465 -0.10470567128396134 -0.9704465393059174 4.015965979258028
+  position -0.3926317547720406 -1.8420631351765198 1.5638081424030803
+  follow "NAO:head:cameraTPS"
+  followType "Pan and Tilt Shot"
 }
 Background {
   backUrl [
@@ -152,20 +154,6 @@ WoodenChair {
   rotation 0 0 1 -2.8798
 }
 Nao {
-  hidden rotation_24 0 1 0 0.9600000107392789
-  hidden rotation_25 0 0.9999999999999999 0 0.9600000393369322
-  hidden rotation_26 0 1 0 0.9600000105831213
-  hidden rotation_27 0 0.9999999999999999 0 0.9600000168610818
-  hidden rotation_28 0 0.9999999999999999 0 0.9600000277172737
-  hidden rotation_29 0 1 0 0.9600000087202518
-  hidden rotation_31 0 -1 0 0.9600000063258207
-  hidden rotation_36 0 1 0 0.96000000911039
-  hidden rotation_37 0 1 0 0.959999965458532
-  hidden rotation_38 0 0.9999999999999999 0 0.9599999845804364
-  hidden rotation_39 0 1 0 0.9600000071461476
-  hidden rotation_40 0 1 0 0.9599999557776215
-  hidden rotation_41 0 1 0 0.9599999820245815
-  hidden rotation_43 0 -1 0 0.9599999830269105
   translation -1.75 0.95 0.334
   controller "nao_pp_s8"
   cameraWidth 320
@@ -182,6 +170,13 @@ Nao {
     }
   ]
   headSlot [
+    Camera {
+      translation -0.29258 0 0.235
+      rotation 0 1 0 0.523599
+      name "cameraTPS"
+      width 320
+      height 240
+    }
     Speaker {
     }
   ]

@@ -6,8 +6,10 @@ maximizedDockId: -1
 centralWidgetVisible: 1
 projectionMode: PERSPECTIVE
 orthographicViewHeight: 4.57117
-textFiles: 0 "controllers/nao_pp_s8/nao_pp_s8.py" "controllers/nao_pp_s8/naomotion.py" "controllers/nao_pp_s8/pose.py"
+textFiles: 1 "controllers/nao_pp_s8/nao_pp_s8.py" "controllers/nao_pp_s8/naomotion.py" "controllers/nao_pp_s8/pose.py"
 globalOptionalRendering: DistanceSensorRays
 consoles: Console:All:All
 renderingDevicePerspectives: NAO:CameraBottom;0;0.8375;0;0
-renderingDevicePerspectives: NAO:CameraTop;0;1.125;0;0
+renderingDevicePerspectives: NAO:CameraTop;0;1.125;0.00130383;0.275
+renderingDevicePerspectives: NAO:camera;1;3.625;0;0
+renderingDevicePerspectives: NAO:cameraTPS;0;5.48438;0;0

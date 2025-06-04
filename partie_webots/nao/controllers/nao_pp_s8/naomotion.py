@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from controller import Robot, Motion, Speaker, Lidar
+from controller import Robot, Motion, Speaker, DistanceSensor, Camera
 
 class NaoMotion:
   
@@ -14,6 +14,8 @@ class NaoMotion:
        self.speaker = robot.getDevice("speaker")
        self.distanceSensor = robot.getDevice("front_sensor")
        self.distanceSensor.enable(64)
+       self.cameraTPS = robot.getDevice("cameraTPS")
+       self.cameraTPS.enable(64)
        if self.speaker: # Always good practice to check if the device was found
             print("Speaker find")
        else:
@@ -80,6 +82,15 @@ class NaoMotion:
    def can_get_anim():
        return self.can_anim 
   
+  
+   def neutral(self, speed):
+       self._wait(500)
+  
+   def change_speed(self, speed):
+       self._checkspeed(speed)
+       self.speaker.speak(f"Speed set :{speed}",100)
+       self._wait(1000)
+   
    def forward(self, speed):
         if self.distanceSensor.getValue() < 0.50:
             self.cant_move(speed)
@@ -113,12 +124,12 @@ class NaoMotion:
    
    def coucou(self,speed):
        self._checkspeed(speed)
-       self.speaker.speak("Hello, how are you ?",1)
+       self.speaker.speak("Hello, how are you ?",100)
        motion = self.motions["HandWave"][speed-1]
        self._applyMotion(motion)
 
    def cant_move(self, speed):
        self._checkspeed(speed)
-       self.speaker.speak("Can't move",1)
+       self.speaker.speak("Can't move",100)
        motion = self.motions["No"][speed-1]
        self._applyMotion(motion)
