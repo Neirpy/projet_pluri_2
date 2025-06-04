@@ -1,4 +1,6 @@
 # main.py
+from typing import List
+
 from fastapi import FastAPI
 from pydantic import BaseModel
 import joblib
@@ -24,7 +26,6 @@ list_features_speed = [
     "MOUTH_RIGHT_X", "MOUTH_RIGHT_Y",
     "LEFT_SHOULDER_X", "LEFT_SHOULDER_Y",
     "RIGHT_SHOULDER_X", "RIGHT_SHOULDER_Y",
-    "vitesse"
 ]
 
 list_features_move = [
@@ -47,7 +48,6 @@ list_features_move = [
     "RIGHT_INDEX_X", "RIGHT_INDEX_Y",
     "LEFT_THUMB_X", "LEFT_THUMB_Y",
     "RIGHT_THUMB_X", "RIGHT_THUMB_Y",
-    "action"
 ]
 
 columns = [
@@ -62,12 +62,12 @@ columns = [
     "LEFT_HIP_X", "LEFT_HIP_Y", "RIGHT_HIP_X", "RIGHT_HIP_Y", "LEFT_KNEE_X", "LEFT_KNEE_Y",
     "RIGHT_KNEE_X", "RIGHT_KNEE_Y", "LEFT_ANKLE_X", "LEFT_ANKLE_Y", "RIGHT_ANKLE_X", "RIGHT_ANKLE_Y",
     "LEFT_HEEL_X", "LEFT_HEEL_Y", "RIGHT_HEEL_X", "RIGHT_HEEL_Y", "LEFT_FOOT_INDEX_X",
-    "LEFT_FOOT_INDEX_Y", "RIGHT_FOOT_INDEX_X", "RIGHT_FOOT_INDEX_Y", "id", "action"
+    "LEFT_FOOT_INDEX_Y", "RIGHT_FOOT_INDEX_X", "RIGHT_FOOT_INDEX_Y"
 ]
 
 # Classe d'entrée
 class InputData(BaseModel):
-    data: dict
+    values: List[float]
 app = FastAPI()
 
 @app.post("/predict")
@@ -75,21 +75,25 @@ def predict(input: InputData):
     if len(input.values) != len(columns):
         return {"error": f"Expected {len(columns)} values, got {len(input.values)}"}
 
+    # Création du DataFrame complet
     df_full = pd.DataFrame([input.values], columns=columns)
 
-    df_speed = df_full[list_features_speed]
-    df_move = df_full[list_features_move]
+    # Normalisation de toutes les colonnes
+    df_full_norm = normalize(df_full)
+    df_full_norm = pd.DataFrame(df_full_norm, columns=columns)
 
-    df_speed_norm = normalize(df_speed)
-    df_move_norm = normalize(df_move)
+    # Sélection des features après normalisation
+    df_speed_norm = df_full_norm[list_features_speed]
+    df_move_norm = df_full_norm[list_features_move]
 
+    # Prédictions
     pred_speed = model_speed.predict(df_speed_norm)[0]
     pred_move = model_move.predict(df_move_norm)[0]
 
-    return {
-        "prediction_speed": int(pred_speed),
-        "prediction_move": int(pred_move)
-    }
+    return [
+        int(pred_move),
+        int(pred_speed)
+        ]
 
 @app.get("/random")
 def random():

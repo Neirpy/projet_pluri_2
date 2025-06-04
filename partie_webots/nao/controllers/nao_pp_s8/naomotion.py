@@ -1,15 +1,23 @@
 from datetime import datetime, timedelta
-from controller import Robot, Motion
+from controller import Robot, Motion, Speaker, Lidar
 
 class NaoMotion:
   
-   ms = ["Forwards", "Backwards", "TurnLeft40", "TurnRight40", "SideStepLeft", "SideStepRight"]
+   ms = ["Forwards", "Backwards", "TurnLeft40", "TurnRight40", "SideStepLeft", "SideStepRight", "HandWave","Shoot","TaiChi","WipeForehead", "No"]
    motions = {}
   
    def __init__(self, robot):
        self.robot = robot
        self.timestep = int(robot.getBasicTimeStep())
-       self._createMotions() 
+       self._createMotions()
+       self.can_anim = True
+       self.speaker = robot.getDevice("speaker")
+       self.distanceSensor = robot.getDevice("front_sensor")
+       self.distanceSensor.enable(64)
+       if self.speaker: # Always good practice to check if the device was found
+            print("Speaker find")
+       else:
+            print("Speaker device not found!")
   
    def _createMotions(self):
     for n in self.ms: 
@@ -51,16 +59,35 @@ class NaoMotion:
    def _checkdir(self, dir):
         if type(dir) != str: raise TypeError("direction should be a string")
         if dir != "left" and dir != "right": raise ValueError("direction should be left or right")
-    
+   
+   def _wait(self, duration_ms):
+        start_time = self.robot.getTime() * 1000 # Convertir en ms
+        while self.robot.step(self.timestep) != -1:
+            current_time = self.robot.getTime() * 1000 # Convertir en ms
+            if (current_time - start_time) >= duration_ms:
+                break
+   
    def _applyMotion(self, motion):
         motion.play()
+        self.can_anim = False
+        # print(motion.getDuration())
         while self.robot.step(self.timestep) != -1:
-            if motion.isOver(): return 
-    
+            if motion.isOver() and motion.getTime() >= motion.getDuration() - 5: 
+                # print("---", motion.getTime())
+                self.can_anim = True
+                return 
+                
+   def can_get_anim():
+       return self.can_anim 
+  
    def forward(self, speed):
-        self._checkspeed(speed) 
-        motion = self.motions["Forwards"][speed-1]
-        self._applyMotion(motion)
+        if self.distanceSensor.getValue() < 0.50:
+            self.cant_move(speed)
+            self._wait(500)
+        else:
+            self._checkspeed(speed) 
+            motion = self.motions["Forwards"][speed-1]
+            self._applyMotion(motion)
        
    def backward(self, speed):
         self._checkspeed(speed) 
@@ -68,6 +95,9 @@ class NaoMotion:
         self._applyMotion(motion)
     
    def turn(self, dir, speed):
+       if self.distanceSensor.getValue() < 0.30:
+            self.cant_move(speed)
+            self._wait(500)
        self._checkdir(dir)
        self._checkspeed(speed)
        if dir=="left": motion = self.motions["TurnLeft40"][speed-1]
@@ -79,4 +109,16 @@ class NaoMotion:
        self._checkspeed(speed)
        if dir=="left": motion = self.motions["SideStepLeft"][speed-1]
        else: motion = self.motions["SideStepRight"][speed-1]
+       self._applyMotion(motion)
+   
+   def coucou(self,speed):
+       self._checkspeed(speed)
+       self.speaker.speak("Hello, how are you ?",1)
+       motion = self.motions["HandWave"][speed-1]
+       self._applyMotion(motion)
+
+   def cant_move(self, speed):
+       self._checkspeed(speed)
+       self.speaker.speak("Can't move",1)
+       motion = self.motions["No"][speed-1]
        self._applyMotion(motion)
