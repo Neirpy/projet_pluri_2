@@ -14,6 +14,8 @@ class NaoMotion:
        self.speaker = robot.getDevice("speaker")
        self.distanceSensor = robot.getDevice("front_sensor")
        self.distanceSensor.enable(64)
+       self.cameraTop = robot.getDevice("CameraTop")
+       self.cameraTop.enable(64)
        self.cameraTPS = robot.getDevice("cameraTPS")
        self.cameraTPS.enable(64)
        if self.speaker: # Always good practice to check if the device was found
@@ -89,10 +91,10 @@ class NaoMotion:
    def change_speed(self, speed):
        self._checkspeed(speed)
        self.speaker.speak(f"Speed set :{speed}",100)
-       self._wait(1000)
+       self._wait(700)
    
    def forward(self, speed):
-        if self.distanceSensor.getValue() < 0.50:
+        if self.distanceSensor.getValue() < 0.40:
             self.cant_move(speed)
             self._wait(500)
         else:
@@ -106,7 +108,7 @@ class NaoMotion:
         self._applyMotion(motion)
     
    def turn(self, dir, speed):
-       if self.distanceSensor.getValue() < 0.30:
+       if self.distanceSensor.getValue() < 0.40:
             self.cant_move(speed)
             self._wait(500)
        self._checkdir(dir)

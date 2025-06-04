@@ -53,6 +53,7 @@ class Pose:
         # et envoyé dans le corps de la requête POST.
         # J'ai encapsulé 'vec' sous une clé 'pose_data', vous pouvez adapter le nom.
         payload = {"values": vec}
+        
 
         # Envoyer une requête POST à l'URL.
         # Le paramètre 'json=payload' gère la sérialisation en JSON et l'en-tête Content-Type.
@@ -63,6 +64,7 @@ class Pose:
             #print("POST request successful!")
             # Si la réponse du serveur est JSON, vous pouvez la parser directement:
             data = response.json()
+            print(data)
             return data # Retourne les données JSON reçues du serveur après le POST
         else:
             print(f"POST request failed with status code: {response.status_code}")

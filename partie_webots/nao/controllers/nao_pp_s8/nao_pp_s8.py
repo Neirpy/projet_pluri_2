@@ -23,48 +23,40 @@ pose = Pose(min_detection_confidence, min_tracking_confidence,
 
 speed=3
 
-# arriere = 1
-# avant = 2
-# droite = 3 
-# gauche = 4
-# tourner_droite = 5
-# tourner_gauche = 6
-# surprise = 7
-# neutre = 8
-
-pose_vec=[8, 1]
+pose_vec=['MOYEN', 'NEUTRE']
 current_speed = 2
 while robot.step(timestep) != -1:
     # a processed version of vec should go as input of the model
     print(pose_vec)
-    speed = pose_vec[1]
-    if speed == 1 and current_speed != 1:
+    speed = pose_vec[0]
+    if speed == 'LENT' and current_speed != 1:
         current_speed -=1
         motion.change_speed(current_speed)
         
-    if speed == 3 and current_speed != 3:
+    if speed == 'RAPIDE' and current_speed != 3:
         current_speed += 1
         motion.change_speed(current_speed)
+    print(current_speed)
     # this code just show the different moves
-    if pose_vec[0] == 8:
+    if pose_vec[1] == 'NEUTRE':
         motion.neutral(current_speed)
-    if pose_vec[0] == 6:
+    if pose_vec[1] == 'TOURNER_DROITE':
         motion.turn("left", current_speed)
-    if pose_vec[0] == 5:
+    if pose_vec[1] == 'TOURNER_GAUCHE':
         motion.turn("right", current_speed)
-    if pose_vec[0] == 2: 
+    if pose_vec[1] == 'AVANT': 
         motion.forward(current_speed)
-    if pose_vec[0] == 1:
+    if pose_vec[1] == 'ARRIERE':
         motion.backward(current_speed)
-    if pose_vec[0] == 4:
-        if speed == 3 :
-            speed = 2
+    if pose_vec[1] == 'DROITE':
+        if current_speed == 3 :
+            current_speed = 2
         motion.sidestep("left", current_speed)
-    if pose_vec[0] == 3: 
-        if speed == 3 :
-            speed = 2
+    if pose_vec[1] == 'GAUCHE': 
+        if current_speed == 3 :
+            current_speed = 2
         motion.sidestep("right", current_speed)
-    if pose_vec[0] == 7:
+    if pose_vec[1] == 'SURPRISE':
         motion.coucou(current_speed)
     #speed = (speed % 3) + 1 
     if motion.can_get_anim:

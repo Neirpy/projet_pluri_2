@@ -43,10 +43,8 @@ WorldInfo {
   ]
 }
 Viewpoint {
-  orientation 0.21741719515747465 -0.10470567128396134 -0.9704465393059174 4.015965979258028
-  position -0.3926317547720406 -1.8420631351765198 1.5638081424030803
-  follow "NAO:head:cameraTPS"
-  followType "Pan and Tilt Shot"
+  orientation 0.20455588437096814 -0.011787433953537629 -0.9787839120919398 3.2542633411542248
+  position 3.726539285329561 -0.00029527842558230155 2.4092048846638265
 }
 Background {
   backUrl [
@@ -171,11 +169,11 @@ Nao {
   ]
   headSlot [
     Camera {
-      translation -0.29258 0 0.235
-      rotation 0 1 0 0.523599
+      translation -1.23951 0 0.271171
+      rotation 0 -1 0 -0.261795307179586
       name "cameraTPS"
-      width 320
-      height 240
+      width 1260
+      height 980
     }
     Speaker {
     }

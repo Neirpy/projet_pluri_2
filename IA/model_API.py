@@ -75,7 +75,7 @@ app = FastAPI()
 @app.post("/predict")
 def predict(input: InputData):
     if len(input.values) != len(columns):
-        return [8,2]
+        return ["MOYEN","NEUTRE"]
 
     # Création du DataFrame complet
     df_full = pd.DataFrame([input.values], columns=columns)
@@ -95,6 +95,7 @@ def predict(input: InputData):
     pred_speed_label = le_speed.inverse_transform([pred_speed_encoded])[0]
     pred_move_label = le_move.inverse_transform([pred_move_encoded])[0]
 
+    print(f"Predicted speed: {pred_speed_label}, Predicted move: {pred_move_label}")
     return [
         pred_speed_label,
         pred_move_label
