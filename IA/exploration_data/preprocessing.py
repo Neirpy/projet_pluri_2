@@ -1,8 +1,10 @@
 import pandas as pd
 from sklearn.decomposition import PCA
 import numpy as np
+from sklearn.preprocessing import LabelEncoder
 
-def normalize(df:pd.DataFrame):
+
+def normalize(df:pd.DataFrame, label) -> pd.DataFrame:
     new_df = pd.DataFrame(columns=df.columns)
     for index, line in df.iterrows():
         x_max_ref = line.LEFT_SHOULDER_X
@@ -23,7 +25,9 @@ def normalize(df:pd.DataFrame):
             else:
                 val = line[col]
             new_df.loc[index, col] = val
-    return new_df.astype(float)
+
+    new_df = new_df.iloc[:,:-1].astype(float)
+    return pd.concat([new_df, df[[label]]], axis=1).reset_index(drop=True)
 
 
 def pca(df, nb_components=None):
@@ -41,7 +45,14 @@ def filter_columns(df:pd.DataFrame, *features)->pd.DataFrame:
 def find_outliers(df):
     pass
 
+
 def corr_matrix(df):
+    df = df.copy()
+    last_col = df.columns[-1]
+
+    le = LabelEncoder()
+    df[last_col] = le.fit_transform(df[last_col])
+
     return df.corr()
 
 

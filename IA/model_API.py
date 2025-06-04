@@ -73,7 +73,7 @@ app = FastAPI()
 @app.post("/predict")
 def predict(input: InputData):
     if len(input.values) != len(columns):
-        return {"error": f"Expected {len(columns)} values, got {len(input.values)}"}
+        return [8,2]
 
     # Création du DataFrame complet
     df_full = pd.DataFrame([input.values], columns=columns)

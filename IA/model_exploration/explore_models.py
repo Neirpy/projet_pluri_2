@@ -174,7 +174,7 @@ def explore_sgd_classifier(X, y):
 
     return sgd_scores
 
-def explore_ann(X, y, nb_layers=2, nb_neurons=8):
+def explore_ann(X, y, nb_layers=3, nb_neurons=32):
     input_dim = X.shape[1]
     nb_outputs = len(np.unique(y))
 
