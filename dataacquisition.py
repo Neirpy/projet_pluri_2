@@ -88,7 +88,7 @@ def saveLandmarks(tosave_list, file_prefix):
     create_directory_if_not_exists(file_prefix)
 
     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    filename = os.path.join(file_prefix, f"{file_prefix}_{timestamp}.csv") # Save inside the directory
+    filename = os.path.join("IA/data/",file_prefix, f"{file_prefix}_{timestamp}.csv") # Save inside the directory
     with open(filename, "w") as f:
         for line in tosave_list:
             f.write(",".join(line) + "\n")
@@ -147,14 +147,14 @@ cap.release()
 cv2.destroyAllWindows()
 
 # Save the collected landmarks for each key press at the end
-saveLandmarks(tosave_gauche, "IA/data/gauche")
-saveLandmarks(tosave_droite, "IA/data/droite")
-saveLandmarks(tosave_tourner_gauche, "IA/data/tourner_gauche")
-saveLandmarks(tosave_tourner_droite, "IA/data/tourner_droite")
-saveLandmarks(tosave_avant, "IA/data/avant")
-saveLandmarks(tosave_arriere, "IA/data/arriere")
-saveLandmarks(tosave_surprise, "IA/data/surprise")
-saveLandmarks(tosave_neutre, "IA/data/neutre")
-saveLandmarks(tosave_tete1, "IA/data/lent")
-saveLandmarks(tosave_tete2, "IA/data/moyen")
-saveLandmarks(tosave_tete3, "IA/data/rapide")
+saveLandmarks(tosave_gauche, "gauche")
+saveLandmarks(tosave_droite, "droite")
+saveLandmarks(tosave_tourner_gauche, "tourner_gauche")
+saveLandmarks(tosave_tourner_droite, "tourner_droite")
+saveLandmarks(tosave_avant, "avant")
+saveLandmarks(tosave_arriere, "arriere")
+saveLandmarks(tosave_surprise, "surprise")
+saveLandmarks(tosave_neutre, "neutre")
+saveLandmarks(tosave_tete1, "lent")
+saveLandmarks(tosave_tete2, "moyen")
+saveLandmarks(tosave_tete3, "rapide")
