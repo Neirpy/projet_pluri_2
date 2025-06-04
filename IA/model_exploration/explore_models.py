@@ -7,6 +7,7 @@ from sklearn.neighbors import KNeighborsClassifier
 
 from sklearn.model_selection import cross_val_score
 from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
+from sklearn.model_selection import train_test_split
 from scikeras.wrappers import KerasClassifier
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Dropout, Input
@@ -33,6 +34,8 @@ def explore_models(X, y):
 
     print("\n=== Top 3 modèles (détail des scores) ===")
     top_3 = sorted(summary.items(), key=lambda x: x[1]['mean'], reverse=True)[:3]
+    is_first_model = True
+    first_model = None
     for name, stats in top_3:
         print(f"{name}: scores = {stats['scores']}")
         print(f"\nModèle: {name}")
@@ -72,10 +75,18 @@ def explore_models(X, y):
             print("Modèle non reconnu pour la matrice de confusion.")
             continue
 
-        model.fit(X, y)
-        y_pred = model.predict(X)
+        X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-        cm = confusion_matrix(y, y_pred)
+        model.fit(X_train, y_train)
+
+        if is_first_model:
+            is_first_model = False
+            first_model = model
+
+
+        y_pred = model.predict(X_test)
+
+        cm = confusion_matrix(y_test, y_pred)
         disp = ConfusionMatrixDisplay(confusion_matrix=cm)
         disp.plot(cmap=plt.cm.Blues)
         plt.title(f'Matrice de confusion - {name}')
@@ -87,7 +98,7 @@ def explore_models(X, y):
         importances = rf_model.feature_importances_
         indices = np.argsort(importances)[::-1]
         print("\n=== Random Forest Feature Importances ===")
-        for f in range(X.shape[1]):
+        for f in range(min(5, X.shape[1])):
             print(f"{f + 1}. Feature {indices[f]}: {importances[indices[f]]:.4f}")
 
     if 'Gradient Boosting' in results:
@@ -96,10 +107,11 @@ def explore_models(X, y):
         importances = gb_model.feature_importances_
         indices = np.argsort(importances)[::-1]
         print("\n=== Gradient Boosting Feature Importances ===")
-        for f in range(X.shape[1]):
+        for f in range(min(5, X.shape[1])):
             print(f"{f + 1}. Feature {indices[f]}: {importances[indices[f]]:.4f}")
 
-    return top_3
+
+    return top_3, first_model
 
 def explore_random_forest(X, y):
     rf_model = RandomForestClassifier(n_estimators=100, random_state=42)
