@@ -11,6 +11,8 @@ from exploration_data.preprocessing import normalize_predict
 
 model_speed = joblib.load("models_temp/best_model_speed.pkl")
 model_move = joblib.load("models_temp/best_model_move.pkl")
+le_move = joblib.load("models_temp/label_encoder_move.pkl")
+le_speed = joblib.load("models_temp/label_encoder_speed.pkl")
 
 list_features_speed = [
     "NOSE_X", "NOSE_Y",
@@ -87,12 +89,15 @@ def predict(input: InputData):
     df_move_norm = df_full_norm[list_features_move]
 
     # Prédictions
-    pred_speed = model_speed.predict(df_speed_norm)[0]
-    pred_move = model_move.predict(df_move_norm)[0]
+    pred_speed_encoded = model_speed.predict(df_speed_norm)[0]
+    pred_move_encoded = model_move.predict(df_move_norm)[0]
+
+    pred_speed_label = le_speed.inverse_transform([pred_speed_encoded])[0]
+    pred_move_label = le_move.inverse_transform([pred_move_encoded])[0]
 
     return [
-        int(pred_move),
-        int(pred_speed)
+        pred_speed_label,
+        pred_move_label
         ]
 
 @app.get("/random")
