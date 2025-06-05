@@ -43,8 +43,8 @@ WorldInfo {
   ]
 }
 Viewpoint {
-  orientation -0.2725316409924064 0.002988819996166098 0.9621421784814429 3.120500429320497
-  position 2.7642606229142466 0.6069992261565413 2.4686892370777707
+  orientation -0.11079629909375471 0.0023241961776504874 0.9938404188899017 3.099928234551122
+  position 1.9997446206022493 0.40143745681432 1.1951847065114385
 }
 Background {
   backUrl [
@@ -188,6 +188,26 @@ Nao {
     }
   ]
   headSlot [
+    Solid {
+      translation -0.0193162 0.00517979 -0.05
+      rotation 0.6776629654679902 0.5199849735028663 0.5199889735026625 1.95044
+      children [
+        Shape {
+          appearance Appearance {
+            texture ImageTexture {
+              url [
+                "../mesh/model_texture.jpg"
+              ]
+            }
+          }
+          geometry Mesh {
+            url [
+              "../mesh/model_mini.obj"
+            ]
+          }
+        }
+      ]
+    }
     Camera {
       translation -1.23951 0 0.271171
       rotation 0 -1 0 -0.261795307179586
