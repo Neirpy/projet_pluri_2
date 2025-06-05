@@ -1,5 +1,7 @@
 # Projet Pluridisciplinaire - Semestre 8 (M1 Sciences Cognitives)
 
+HADDAD Naoures, MICK Léa, BACHEROT Jordy, GRUNBLATT Cyprien.
+
 ## 🧠 Objectif du projet
 
 Ce projet a pour but de contrôler un robot simulé dans Webots à partir de gestes captés par une webcam. Les gestes sont détectés à l'aide de **MediaPipe**, puis classifiés avec un modèle d'IA entraîné **manuellement** en utilisant des méthodes telles que **RandomForest** et **Keras**. Le comportement du robot est ensuite piloté dans l'environnement **Webots** ou **Choregraphe** (utilisé pour les robots NAO).
