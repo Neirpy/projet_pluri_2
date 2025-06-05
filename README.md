@@ -31,16 +31,16 @@ Ce projet a pour but de contrôler un robot simulé dans Webots à partir de ges
 ---
 
 ## 🤖 Exemple d'utilisation avec Webots
-- Aller dans le dossier IA comportant le script model_API.py ou model_API_onearm.py (model_API_ANN.py possible mais besoin d'un tensorflow spécifique)
-- Lancer dans le terminal la commande : fastapi dev model_API_one_arm.py (ou model_API.py)
-- Lancer le projet webots une fois l’API bien démarré
+1. Aller dans le dossier IA comportant le script model_API.py ou model_API_onearm.py (model_API_ANN.py possible mais besoin d'un tensorflow spécifique)
+2. Lancer dans le terminal la commande : fastapi dev model_API_one_arm.py (ou model_API.py)
+3. Lancer le projet webots une fois l’API bien démarré
 
 ## 💃 Exemple d'utilisation avec Choregraph
-- Aller dans le dossier IA comportant le script model_API_mediapipe.py
-- Lancer dans le terminal la commande : fastapi dev model_API_mediapipe.py
-- Installer à la main les setups de requests sur python 2.7
-- Changer l'adresse IP
-- Lancer le script
+1. Aller dans le dossier IA comportant le script model_API_mediapipe.py
+2. Lancer dans le terminal la commande : fastapi dev model_API_mediapipe.py
+3. Installer à la main les setups de requests sur python 2.7
+4. Changer l'adresse IP
+5. Lancer le script
 
 
 ## 🧪 Structure du projet
