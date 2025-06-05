@@ -8,6 +8,11 @@ from IA.exploration_data.preprocessing import corr_matrix, pca
 
 
 def boxplot(df:pd.DataFrame, class_name:str):
+    """
+    permet de créer des boxplot pour chaque colonne d'un dataframe
+    :param df: dataframe to plot
+    :class_name: class used for visualisation
+    """
     categories = df[class_name].unique()
     categories.sort()
     for col in df.columns:
@@ -20,6 +25,12 @@ def boxplot(df:pd.DataFrame, class_name:str):
             plt.show()
 
 def heatmap(df:pd.DataFrame, type:str):
+    """
+    permet de créer un heatmap pour une matrice de corrélation
+    :param df: df used for correlation matrix
+    :param type: type of dataframe (speed or action)
+    :return: None
+    """
     corr = corr_matrix(df)
     fig, ax = plt.subplots(figsize=(15, 15))
     sns.heatmap(corr, annot=True, ax=ax)
@@ -28,6 +39,9 @@ def heatmap(df:pd.DataFrame, type:str):
     plt.show()
 
 def scatter_matrix(df:pd.DataFrame, type:str, *features):
+    """
+    Permet de créer une scatter matrix
+    """
 
     components, _, explained_variance = pca(df[list(features)])
 
@@ -53,6 +67,11 @@ def scatter_matrix(df:pd.DataFrame, type:str, *features):
     fig.show()
 
 def elbow_method(x:pd.DataFrame):
+    """
+    affiche l'elbow method pour le pca
+    :param x: dataframe for elbow method
+    :return:None
+    """
     _, _, explained_variance_ratio = pca(x)
     fig = px.area(
         x=range(1, explained_variance_ratio.shape[0] + 1),
@@ -62,6 +81,14 @@ def elbow_method(x:pd.DataFrame):
     fig.show()
 
 def visualize_pca(df:pd.DataFrame, nb_components:int, type:str, *features):
+    """
+    Permet de visualiser un pca à 2 ou 3 dimensions
+    :param df: dataframe to vizualise the pca
+    :param nb_components: number of components for pca
+    :param type: type of data for the title
+    :features: list of features to visualize
+    :return: None
+    """
     components, loadings, _ = pca(df[list(features)], nb_components)
 
 
