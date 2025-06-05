@@ -104,7 +104,7 @@ def predict(input: InputData):
 
 @app.get("/random")
 def random():
-    random_choice_action = np.random.choice(["avant", "arriere", "droite", "gauche", "tourner_droite", "tourner_gauche", "coucou", "neutre"])
+    random_choice_action = np.random.choice(["AVANT", "ARRIERE", "DROITE", "GAUCHE", "TOURNER_DROITE", "TOURNER_GAUCHE", "COUCOU", "NEUTRE"])
     random_choice_speed = np.random.choice(
-        ["1", "2", "3"])
-    return random_choice_action, random_choice_speed
+        ["LENT", "MOYEN", "RAPIDE"])
+    return random_choice_speed,random_choice_action
