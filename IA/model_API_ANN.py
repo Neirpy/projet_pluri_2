@@ -5,13 +5,20 @@ from pydantic import BaseModel
 import joblib
 import numpy as np
 import pandas as pd
+import tensorflow as tf
+
 
 from exploration_data.preprocessing import normalize_predict
 
+model_move = tf.keras.models.load_model("models_ANN/best_ann_model_move.h5")
 model_speed = joblib.load("models_temp/best_model_speed.pkl")
-model_move = joblib.load("models_temp/best_model_move.pkl")
-le_move = joblib.load("models_temp/label_encoder_move.pkl")
+
+le_move = joblib.load("models_ANN/label_encoder_move.pkl")
 le_speed = joblib.load("models_temp/label_encoder_speed.pkl")
+
+neutral_class_index_move = list(le_move.classes_).index("NEUTRE")
+
+print("Index de la classe 'neutre' (move):", neutral_class_index_move)
 
 list_features_speed = [
     "NOSE_X", "NOSE_Y",
@@ -74,37 +81,52 @@ app = FastAPI()
 @app.post("/predict")
 def predict(input: InputData):
 
-
     if len(input.values) != len(columns):
         return ["MOYEN","NEUTRE"]
 
-    # Création du DataFrame complet
     df_full = pd.DataFrame([input.values], columns=columns)
-
-    # Normalisation de toutes les colonnes
     df_full_norm = normalize_predict(df_full)
     df_full_norm = pd.DataFrame(df_full_norm, columns=columns)
 
-    # Sélection des features après normalisation
     df_speed_norm = df_full_norm[list_features_speed]
     df_move_norm = df_full_norm[list_features_move]
 
-    # Prédictions
+
     pred_speed_encoded = model_speed.predict(df_speed_norm)[0]
-    pred_move_encoded = model_move.predict(df_move_norm)[0]
+
+    # Prédictions for move : modèle Keras -> probabilités
+    probas_move = model_move.predict(df_move_norm)
+
+    # Appliquer la logique custom (delta, alpha à fixer, ici exemples)
+    delta = 0.20
+    alpha = 0.30
+
+    pred_move_encoded = apply_custom_logic(probas_move, delta, alpha, neutral_class_index_move)[0]
 
     pred_speed_label = le_speed.inverse_transform([pred_speed_encoded])[0]
     pred_move_label = le_move.inverse_transform([pred_move_encoded])[0]
 
     print(f"Predicted speed: {pred_speed_label}, Predicted move: {pred_move_label}")
-    return [
-        pred_speed_label,
-        pred_move_label
-        ]
 
-@app.get("/random")
-def random():
-    random_choice_action = np.random.choice(["avant", "arriere", "droite", "gauche", "tourner_droite", "tourner_gauche", "coucou", "neutre"])
-    random_choice_speed = np.random.choice(
-        ["1", "2", "3"])
-    return random_choice_action, random_choice_speed
+    return [pred_speed_label, pred_move_label]
+
+def apply_custom_logic(probas: np.ndarray, delta: float, alpha: float, neutral_class_index: int):
+    """
+    probas: (N_samples, N_classes) sorties softmax
+    delta, alpha: seuils
+    neutral_class_index: index de la classe 'neutre' (ex: 4)
+    """
+    p_neutral_all = probas[:, neutral_class_index]
+
+    sorted_indices = np.argsort(probas, axis=1)
+    p_sorted = np.take_along_axis(probas, sorted_indices, axis=1)
+    p_max_all = p_sorted[:, -1]
+    p_2nd_all = p_sorted[:, -2]
+
+    delta_all = p_max_all - p_2nd_all
+
+    preds_argmax = np.argmax(probas, axis=1)
+    to_neutral = np.logical_or(p_neutral_all >= alpha, delta_all < delta)
+    final_preds = preds_argmax.copy()
+    final_preds[to_neutral] = neutral_class_index
+    return final_preds
