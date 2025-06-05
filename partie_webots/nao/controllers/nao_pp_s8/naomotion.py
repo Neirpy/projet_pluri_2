@@ -84,7 +84,6 @@ class NaoMotion:
    def can_get_anim():
        return self.can_anim 
   
-  
    def neutral(self, speed):
        self._wait(500)
   

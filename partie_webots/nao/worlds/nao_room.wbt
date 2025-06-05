@@ -43,8 +43,8 @@ WorldInfo {
   ]
 }
 Viewpoint {
-  orientation 0.20455588437096814 -0.011787433953537629 -0.9787839120919398 3.2542633411542248
-  position 3.726539285329561 -0.00029527842558230155 2.4092048846638265
+  orientation -0.2725316409924064 0.002988819996166098 0.9621421784814429 3.120500429320497
+  position 2.7642606229142466 0.6069992261565413 2.4686892370777707
 }
 Background {
   backUrl [
@@ -64,6 +64,26 @@ Background {
   ]
   topUrl [
     "https://raw.githubusercontent.com/cyberbotics/webots/R2025a/projects/robots/softbank/nao/worlds/textures/cubic/brown_floor_top.png"
+  ]
+}
+Solid {
+  translation 6.17627e-07 1.4001e-06 0.5
+  rotation -0.47690573214883214 0.621513650930685 0.6215156509295617 -2.2515953071795867
+  children [
+    Shape {
+      appearance Appearance {
+        texture ImageTexture {
+          url [
+            "../mesh/model_texture.jpg"
+          ]
+        }
+      }
+      geometry Mesh {
+        url [
+          "../mesh/model_mesh.obj"
+        ]
+      }
+    }
   ]
 }
 CeilingLight {
