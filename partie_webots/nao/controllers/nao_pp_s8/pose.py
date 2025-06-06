@@ -12,7 +12,10 @@ class Pose:
       self.min_tracking_confidence = min_tracking_confidence
       self.model_complexity = model_complexity
       self.video_source = video_source
+      # url en localhost
       self.url = "http://127.0.0.1:8000/predict"
+      # url en distance pour ANN
+      #self.url = "http://10.243.212.44:8000/predict"
  
   def _toVector(self, landmarks):
     if landmarks is None: return []
