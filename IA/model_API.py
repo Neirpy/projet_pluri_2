@@ -8,11 +8,13 @@ import pandas as pd
 
 from exploration_data.preprocessing import normalize_predict
 
+# Chargement des modèles et des encodeurs de labels
 model_speed = joblib.load("models_temp/best_model_speed.pkl")
 model_move = joblib.load("models_temp/best_model_move.pkl")
 le_move = joblib.load("models_temp/label_encoder_move.pkl")
 le_speed = joblib.load("models_temp/label_encoder_speed.pkl")
 
+# Liste des features sélectionnées pour la vitesse et le mouvement
 list_features_speed = [
     "NOSE_X", "NOSE_Y",
     "LEFT_EYE_INNER_X", "LEFT_EYE_INNER_Y",
@@ -51,6 +53,7 @@ list_features_move = [
     "RIGHT_THUMB_X", "RIGHT_THUMB_Y",
 ]
 
+# Toutes les colonnes des landmarks MediaPipe
 columns = [
     "NOSE_X", "NOSE_Y", "LEFT_EYE_INNER_X", "LEFT_EYE_INNER_Y", "LEFT_EYE_X", "LEFT_EYE_Y",
     "LEFT_EYE_OUTER_X", "LEFT_EYE_OUTER_Y", "RIGHT_EYE_INNER_X", "RIGHT_EYE_INNER_Y", "RIGHT_EYE_X",
@@ -69,12 +72,16 @@ columns = [
 # Classe d'entrée
 class InputData(BaseModel):
     values: List[float]
+
+# Initialisation de l'application FastAPI
 app = FastAPI()
 
+# Endpoint POST pour la prédiction
 @app.post("/predict")
 def predict(input: InputData):
-
-
+    """
+    Prédit la vitesse et le mouvement à partir des données d'entrée.
+    """
     if len(input.values) != len(columns):
         return ["MOYEN","NEUTRE"]
 
@@ -93,6 +100,7 @@ def predict(input: InputData):
     pred_speed_encoded = model_speed.predict(df_speed_norm)[0]
     pred_move_encoded = model_move.predict(df_move_norm)[0]
 
+    # Décodage des étiquettes
     pred_speed_label = le_speed.inverse_transform([pred_speed_encoded])[0]
     pred_move_label = le_move.inverse_transform([pred_move_encoded])[0]
 
@@ -102,8 +110,12 @@ def predict(input: InputData):
         pred_move_label
         ]
 
+# Endpoint de test
 @app.get("/random")
 def random():
+    """
+    Retourne une action et une vitesse aléatoires pour tester l'API.
+    """
     random_choice_action = np.random.choice(["AVANT", "ARRIERE", "DROITE", "GAUCHE", "TOURNER_DROITE", "TOURNER_GAUCHE", "COUCOU", "NEUTRE"])
     random_choice_speed = np.random.choice(
         ["LENT", "MOYEN", "RAPIDE"])
