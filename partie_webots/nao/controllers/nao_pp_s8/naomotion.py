@@ -93,7 +93,7 @@ class NaoMotion:
        self._wait(700)
    
    def forward(self, speed):
-        if self.distanceSensor.getValue() < 0.40:
+        if self.distanceSensor.getValue() < 0.30:
             self.cant_move(speed)
             self._wait(500)
         else:
@@ -107,7 +107,7 @@ class NaoMotion:
         self._applyMotion(motion)
     
    def turn(self, dir, speed):
-       if self.distanceSensor.getValue() < 0.40:
+       if self.distanceSensor.getValue() < 0.30:
             self.cant_move(speed)
             self._wait(500)
        self._checkdir(dir)
