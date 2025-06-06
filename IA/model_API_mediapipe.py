@@ -1,4 +1,4 @@
-# main.py (Modified FastAPI Application)
+# Generation Assist by ChatGPT
 from typing import List
 import cv2
 import mediapipe as mp
@@ -87,6 +87,7 @@ def _toVector(landmarks):
         line.append(l.y)
     return line
 
+# FastAPI route to get predictions
 @app.get("/get_prediction")
 def get_prediction():
     """
@@ -124,6 +125,7 @@ def get_prediction():
             pred_speed_encoded = model_speed.predict(df_speed_norm)[0]
             pred_move_encoded = model_move.predict(df_move_norm)[0]
 
+            # Decode predictions
             pred_speed_label = str(le_speed.inverse_transform([pred_speed_encoded])[0])
             pred_move_label = str(le_move.inverse_transform([pred_move_encoded])[0])
 

@@ -17,6 +17,11 @@ import matplotlib.pyplot as plt
 
 
 def explore_models(X, y):
+    """
+    Explore différents modèles de machine learning sur les données X et y.
+    Affiche les résultats des modèles et les scores moyens et l'écart-type.
+    Retourne les résultats des 3 meilleurs modèles et le premier modèle.
+    """
     results = train_models(X, y)
 
     print("=== Moyenne et écart-type des scores ===")
@@ -110,9 +115,9 @@ def explore_models(X, y):
         for f in range(min(5, X.shape[1])):
             print(f"{f + 1}. Feature {indices[f]}: {importances[indices[f]]:.4f}")
 
-
     return top_3, first_model
 
+# Toutes les fonctions d'exploration des modèles
 def explore_random_forest(X, y):
     rf_model = RandomForestClassifier(n_estimators=100, random_state=42)
     rf_scores = cross_val_score(rf_model, X, y, cv=5, scoring='accuracy')
@@ -193,6 +198,9 @@ def explore_ann(X, y, nb_layers=3, nb_neurons=32):
     return ann_scores
 
 def create_ann_model(input_dim, nb_outputs, nb_layers=2, nb_neurons=8):
+    """
+    Crée un modèle de réseau de neurones artificiels (ANN) avec Keras.
+    """
     model = Sequential()
     model.add(Input(shape=(input_dim,)))
     model.add(Dense(nb_neurons, activation='relu'))
@@ -205,6 +213,9 @@ def create_ann_model(input_dim, nb_outputs, nb_layers=2, nb_neurons=8):
     return model
 
 def train_models(X, y):
+    """
+    Entraîne plusieurs modèles de machine learning sur les données X et y.
+    """
     models_results = {}
 
     print("Training Random Forest...")

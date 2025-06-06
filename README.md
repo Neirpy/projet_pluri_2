@@ -31,11 +31,11 @@ Ce projet a pour but de contrôler un robot simulé dans Webots à partir de ges
 ---
 
 ## 🤖 Exemple d'utilisation avec Webots
-1. Aller dans le dossier IA comportant le script model_API.py ou model_API_onearm.py (model_API_ANN.py possible mais besoin d'un tensorflow spécifique)
+1. Aller dans le dossier IA comportant le script model_API.py ou model_API_one_arm.py (model_API_ANN.py possible mais besoin de version spécificique)
 2. Lancer dans le terminal la commande : fastapi dev model_API_one_arm.py (ou model_API.py)
 3. Lancer le projet webots une fois l’API bien démarré
 
-## 💃 Exemple d'utilisation avec Choregraph
+## 💃 Exemple d'utilisation avec Choregraph (Besoin d'un robot NAO ou sur choregraphe)
 1. Aller dans le dossier IA comportant le script model_API_mediapipe.py
 2. Lancer dans le terminal la commande : fastapi dev model_API_mediapipe.py
 3. Installer à la main les setups de requests sur python 2.7
@@ -47,18 +47,19 @@ Ce projet a pour but de contrôler un robot simulé dans Webots à partir de ges
 
 ```bash
 projet_pluri_2/
-├── IA/             # Tous les scripts et modèles en python
-├────── data/              # Ensemble des données enregistrées via mediapipe et regroupé par action
-├────── data_regrouped_unprocessed/              # Données regroupées et séparées uniquement entre celles correspondantes à un changement de vitesse et à son mouvement 
-├────── exploration_data/              # 
-├────── model_exploration/              # 
-├────── model_ANN/              # 
-├────── model_one_arm/              # 
-├────── model_temp/              # 
-├────── preprocessing_data/              # 
-├────── preprocessing_one_arm_data/              # Entraînement et sauvegarde des modèles (RandomForest / Keras)
-├────── model_API.py              # Type de script à exécuter avec fastAPI
-├────── ....py
+├── IA/             # Tous les scripts concernant le traitements des données et les modèles en python
+├────── data/              # Ensemble des données enregistrées via mediapipe et regroupé par action dans des dossiers
+├────── data_regrouped_unprocessed/              # Données regroupées non traités pour l'entraînement des modèles de classification de mouvements et de vitesses
+├────── exploration_data/              # Fonction python pour explorer les données utiliser dans les notebooks python pre_processing_data et one_arm
+├────── model_exploration/              # Contient les notebooks d'exploration et de sauvegarde des modèles
+├────── model_ANN/              # Contient les modèle de classification de mouvements (Keras)
+├────── model_one_arm/              # Contient le modèle de classification de mouvements pour un bras (Keras)
+├────── model_temp/              # Contient les modèles de classification de mouvements et des vitesses (RandomForest)
+├────── preprocessing_data/              # Données prétraitées pour l'entraînement des modèles de classification de mouvements et de vitesses
+├────── preprocessing_one_arm_data/              #  Données prétraitées pour l'entraînement du modèle de classification de mouvement pour un bras
+├────── data_preprocessing_....ipynb    # Notebooks pour le prétraitement des données
+├────── model_API_....py              # Différents scripts pour les API FastAPI
 ├── partie_choregraph/      # Contient les scripts python 2.7 à exécuter sur choregraph
 ├── partie_webots/         # Comportements/flows pour NAO via Choregraphe
-└── README.md            # Ce fichier
+└── README.md            # Readme du projet
+```

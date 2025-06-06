@@ -10,16 +10,19 @@ import tensorflow as tf
 
 from exploration_data.preprocessing import normalize_predict
 
+# Load models and label encoders
 model_move = tf.keras.models.load_model("models_ANN/best_ann_model_move.h5")
 model_speed = joblib.load("models_temp/best_model_speed.pkl")
 
 le_move = joblib.load("models_ANN/label_encoder_move.pkl")
 le_speed = joblib.load("models_temp/label_encoder_speed.pkl")
 
+# Index of the 'NEUTRE' class in the move label encoder
 neutral_class_index_move = list(le_move.classes_).index("NEUTRE")
 
 print("Index de la classe 'neutre' (move):", neutral_class_index_move)
 
+# Define the features used for speed and move predictions
 list_features_speed = [
     "NOSE_X", "NOSE_Y",
     "LEFT_EYE_INNER_X", "LEFT_EYE_INNER_Y",
@@ -58,6 +61,7 @@ list_features_move = [
     "RIGHT_THUMB_X", "RIGHT_THUMB_Y",
 ]
 
+# Ensure 'columns' matches the order and number of landmarks MediaPipe provides
 columns = [
     "NOSE_X", "NOSE_Y", "LEFT_EYE_INNER_X", "LEFT_EYE_INNER_Y", "LEFT_EYE_X", "LEFT_EYE_Y",
     "LEFT_EYE_OUTER_X", "LEFT_EYE_OUTER_Y", "RIGHT_EYE_INNER_X", "RIGHT_EYE_INNER_Y", "RIGHT_EYE_X",
@@ -73,13 +77,17 @@ columns = [
     "LEFT_FOOT_INDEX_Y", "RIGHT_FOOT_INDEX_X", "RIGHT_FOOT_INDEX_Y"
 ]
 
-# Classe d'entrée
+# Entry class for input data
 class InputData(BaseModel):
     values: List[float]
 app = FastAPI()
 
+# Prediction endpoint
 @app.post("/predict")
 def predict(input: InputData):
+    """
+    Predict speed and move based on input values (mediapipe landmarks).
+    """
     if len(input.values) != len(columns):
         return ["MOYEN","NEUTRE"]
 
@@ -94,10 +102,10 @@ def predict(input: InputData):
 
     df_move_norm = df_move_norm.astype('float32')
 
-    # Prédictions for move : modèle Keras -> probabilités
+    # Prédictions for move : modèle Keras -> probability
     probas_move = model_move.predict(df_move_norm)
 
-    # Appliquer la logique custom (delta, alpha à fixer, ici exemples)
+    # Apply custom logic to get the final prediction
     delta = 0.20
     alpha = 0.30
 
@@ -110,6 +118,7 @@ def predict(input: InputData):
 
     return [pred_speed_label, pred_move_label]
 
+# function to apply custom logic for move predictions
 def apply_custom_logic(probas: np.ndarray, delta: float, alpha: float, neutral_class_index: int):
     """
     probas: (N_samples, N_classes) sorties softmax

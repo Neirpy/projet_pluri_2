@@ -8,11 +8,13 @@ import pandas as pd
 
 from exploration_data.preprocessing import normalize_predict
 
+# Chargement des modèles et des encodeurs
 model_speed = joblib.load("models_temp/best_model_speed.pkl")
 model_move = joblib.load("models_one_arm/best_model_one_arm_move.pkl")
 le_move = joblib.load("models_one_arm/label_encoder_one_arm_move.pkl")
 le_speed = joblib.load("models_temp/label_encoder_speed.pkl")
 
+# Liste des features utilisées pour la vitesse et le mouvement
 list_features_speed = [
     "NOSE_X", "NOSE_Y",
     "LEFT_EYE_INNER_X", "LEFT_EYE_INNER_Y",
@@ -46,6 +48,7 @@ list_features_move = [
     "RIGHT_THUMB_X", "RIGHT_THUMB_Y",
 ]
 
+# Liste complète des colonnes utilisées dans le DataFrame
 columns = [
     "NOSE_X", "NOSE_Y", "LEFT_EYE_INNER_X", "LEFT_EYE_INNER_Y", "LEFT_EYE_X", "LEFT_EYE_Y",
     "LEFT_EYE_OUTER_X", "LEFT_EYE_OUTER_Y", "RIGHT_EYE_INNER_X", "RIGHT_EYE_INNER_Y", "RIGHT_EYE_X",
@@ -66,8 +69,12 @@ class InputData(BaseModel):
     values: List[float]
 app = FastAPI()
 
+# Route pour la prédiction
 @app.post("/predict")
 def predict(input: InputData):
+    """
+    Prédit la vitesse et le mouvement à partir des données d'entrée.
+    """
     if len(input.values) != len(columns):
         return ["MOYEN","NEUTRE"]
 
@@ -95,6 +102,7 @@ def predict(input: InputData):
         pred_move_label
         ]
 
+# Route pour une action aléatoire
 @app.get("/random")
 def random():
     random_choice_action = np.random.choice(["AVANT", "ARRIERE", "DROITE", "GAUCHE", "TOURNER_DROITE", "TOURNER_GAUCHE", "COUCOU", "NEUTRE"])
