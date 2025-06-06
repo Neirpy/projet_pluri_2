@@ -47,19 +47,19 @@ Ce projet a pour but de contrôler un robot simulé dans Webots à partir de ges
 
 ```bash
 projet_pluri_2/
-├── IA/             # Tous les scripts concernant le traitements des données et les modèles en python
-├────── data/              # Ensemble des données enregistrées via mediapipe et regroupé par action dans des dossiers
-├────── data_regrouped_unprocessed/              # Données regroupées non traités pour l'entraînement des modèles de classification de mouvements et de vitesses
-├────── exploration_data/              # Fonction python pour explorer les données utiliser dans les notebooks python pre_processing_data et one_arm
-├────── model_exploration/              # Contient les notebooks d'exploration et de sauvegarde des modèles
-├────── model_ANN/              # Contient les modèle de classification de mouvements (Keras)
-├────── model_one_arm/              # Contient le modèle de classification de mouvements pour un bras (Keras)
-├────── model_temp/              # Contient les modèles de classification de mouvements et des vitesses (RandomForest)
-├────── preprocessing_data/              # Données prétraitées pour l'entraînement des modèles de classification de mouvements et de vitesses
-├────── preprocessing_one_arm_data/              #  Données prétraitées pour l'entraînement du modèle de classification de mouvement pour un bras
+├── IA/          # Tous les scripts concernant le traitement des données et les modèles en python
+├────── data/         # Ensemble des données enregistrées via mediapipe et regroupé par action dans des dossiers
+├────── data_regrouped_unprocessed/        # Données regroupées non traitées pour l'entraînement des modèles de classification de mouvements et de vitesses
+├────── exploration_data/           # Fonction python pour explorer les données utilisé dans les notebooks python pre_processing_data et one_arm
+├────── model_exploration/           # Contient les notebooks d'exploration et de sauvegarde des modèles
+├────── model_ANN/         # Contient les modèles de classification de mouvements (Keras)
+├────── model_one_arm/         # Contient le modèle de classification de mouvements pour un bras (Keras)
+├────── model_temp/         # Contient les modèles de classification de mouvements et des vitesses (RandomForest)
+├────── preprocessing_data/          # Données prétraitées pour l'entraînement des modèles de classification de mouvements et de vitesses
+├────── preprocessing_one_arm_data/         #  Données prétraitées pour l'entraînement du modèle de classification de mouvement pour un bras
 ├────── data_preprocessing_....ipynb    # Notebooks pour le prétraitement des données
 ├────── model_API_....py              # Différents scripts pour les API FastAPI
 ├── partie_choregraph/      # Contient les scripts python 2.7 à exécuter sur choregraph
 ├── partie_webots/         # Comportements/flows pour NAO via Choregraphe
-└── README.md            # Readme du projet
+└── README.md            # Readme du projet    
 ```
