@@ -47,10 +47,18 @@ Ce projet a pour but de contrôler un robot simulé dans Webots à partir de ges
 
 ```bash
 projet_pluri_2/
-├── capture/             # Code de capture des gestes avec MediaPipe
-├── models/              # Entraînement et sauvegarde des modèles (RandomForest / Keras)
-├── webots_control/      # Scripts pour piloter le robot dans Webots
-├── choregraphe/         # Comportements/flows pour NAO via Choregraphe
-├── data/                # Jeux de données de poses/gestes
-├── notebooks/           # Analyse et visualisation des données
+├── IA/             # Tous les scripts et modèles en python
+├────── data/              # Ensemble des données enregistrées via mediapipe et regroupé par action
+├────── data_regrouped_unprocessed/              # Données regroupées et séparées uniquement entre celles correspondantes à un changement de vitesse et à son mouvement 
+├────── exploration_data/              # 
+├────── model_exploration/              # 
+├────── model_ANN/              # 
+├────── model_one_arm/              # 
+├────── model_temp/              # 
+├────── preprocessing_data/              # 
+├────── preprocessing_one_arm_data/              # Entraînement et sauvegarde des modèles (RandomForest / Keras)
+├────── model_API.py              # Type de script à exécuter avec fastAPI
+├────── ....py
+├── partie_choregraph/      # Contient les scripts python 2.7 à exécuter sur choregraph
+├── partie_webots/         # Comportements/flows pour NAO via Choregraphe
 └── README.md            # Ce fichier
